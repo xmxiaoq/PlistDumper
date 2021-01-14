@@ -108,6 +108,17 @@ func (dc *DumpContext) AppendPart() *AtlasPart {
 func (dc *DumpContext) dumpFrames(part *AtlasPart) error {
 	textureFileName := filepath.Join(filepath.Dir(dc.FileName), part.ImageFile)
 
+	if !IsFile(textureFileName) {
+		base := filepath.Base(dc.FileName)
+		fn := strings.TrimSuffix(base, filepath.Ext(base))
+		textureFileName = filepath.Join(filepath.Dir(dc.FileName), fn +".png")
+		if !IsFile(textureFileName) {
+			textureFileName = filepath.Join(filepath.Dir(dc.FileName), fn +".jpg")
+		}
+	}
+
+	//fmt.Println(textureFileName)
+
 	textureImage, err := LoadImage(textureFileName)
 	if err != nil {
 		return fmt.Errorf("open image error:" + textureFileName)
